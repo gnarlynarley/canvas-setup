@@ -1,7 +1,7 @@
 <script lang="ts">
 	import paintOffset from 'src/lib/paintOffset';
 	import renderOptions from 'src/lib/stores/renderOptions';
-	import '../app.scss';
+	import './App.scss';
 </script>
 
 <div class="container">
