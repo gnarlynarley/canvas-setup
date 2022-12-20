@@ -2,6 +2,23 @@
 	import paintOffset from 'src/lib/paintOffset';
 	import renderOptions from 'src/lib/stores/renderOptions';
 	import './App.scss';
+
+	let canvas: HTMLCanvasElement | undefined;
+
+	function copyCanvas() {
+		if (!canvas) return;
+		// const offscreen = document.createElement('canvas');
+		// const context = offscreen.getContext('2d');
+		// if (!context) return;
+		// offscreen.width = canvas.width;
+		// offscreen.height = canvas.height;
+		// context.drawImage(canvas, 0, 0);
+		canvas.toBlob(function (blob) {
+			if (!blob) return;
+			const item = new ClipboardItem({ ['image/png']: blob });
+			navigator.clipboard.write([item]);
+		});
+	}
 </script>
 
 <div class="container">
@@ -61,9 +78,11 @@
 					/>
 				</div>
 			{/if}
+
+			<button type="button" on:click={copyCanvas}>copy canvas</button>
 		</div>
 		<div class="canvas-container">
-			<canvas use:paintOffset={$renderOptions} />
+			<canvas bind:this={canvas} use:paintOffset={$renderOptions} />
 		</div>
 	{:else}
 		<h1>loading..</h1>
