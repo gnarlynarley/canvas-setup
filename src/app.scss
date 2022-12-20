@@ -1,0 +1,22 @@
+*,
+*::after,
+*::before {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	box-sizing: border-box;
+}
+
+:root {
+	--spacing: 1em;
+	--gutter: 0.5em
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	background: url('./tile.svg') repeat;
+}
