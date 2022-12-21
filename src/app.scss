@@ -9,14 +9,14 @@
 
 :root {
 	--spacing: 1em;
-	--gutter: 0.5em
+	--gutter: 0.5em;
+	--ink: white;
+	--paper: #111;
 }
 
 html,
 body {
 	height: 100%;
-}
-
-body {
-	background: url('./tile.svg') repeat;
+	color: var(--ink);
+	background-color: var(--paper);
 }

@@ -4,13 +4,17 @@ export interface RenderOptions {
 	width: number;
 	height: number;
 	offset: number;
-	background: boolean;
-	backgroundColor: string;
-	backgroundOpacity: number;
+	offsetBackground: boolean;
+	offsetBackgroundColor: string;
+	offsetBackgroundOpacity: number;
 	border: boolean;
 	borderWidth: number;
 	borderColor: string;
 	borderOpacity: number;
+	safeZone: boolean;
+	safeZoneColor: string;
+	safeZoneOpacity: number;
+	safeZoneWidth: number;
 }
 
 function toTransparentColor(color: string, opacity: number): string {
@@ -19,20 +23,25 @@ function toTransparentColor(color: string, opacity: number): string {
 		.string();
 }
 
-export default function paintOffset(canvas: HTMLCanvasElement, options: RenderOptions) {
+export default function paintOffset(img: HTMLImageElement, options: RenderOptions) {
+	const canvas = document.createElement('canvas');
 	const context = canvas.getContext('2d');
 
 	function render({
 		width,
 		height,
 		offset,
-		background,
-		backgroundColor,
-		backgroundOpacity,
+		offsetBackground: background,
+		offsetBackgroundColor: backgroundColor,
+		offsetBackgroundOpacity: backgroundOpacity,
 		border,
 		borderWidth,
 		borderColor,
 		borderOpacity,
+		safeZone,
+		safeZoneColor,
+		safeZoneOpacity,
+		safeZoneWidth,
 	}: RenderOptions) {
 		if (!context) return;
 		const canvasWidth = width + offset * 2;
@@ -47,6 +56,17 @@ export default function paintOffset(canvas: HTMLCanvasElement, options: RenderOp
 			context.fillStyle = toTransparentColor(backgroundColor, backgroundOpacity);
 			context.fillRect(0, 0, canvasWidth, canvasHeight);
 			context.clearRect(offset, offset, width, height);
+		}
+
+		if (safeZone) {
+			context.fillStyle = toTransparentColor(safeZoneColor, safeZoneOpacity);
+			context.fillRect(offset, offset, width, height);
+			context.clearRect(
+				offset + safeZoneWidth,
+				offset + safeZoneWidth,
+				width - safeZoneWidth * 2,
+				height - safeZoneWidth * 2,
+			);
 		}
 
 		if (border) {
@@ -65,6 +85,12 @@ export default function paintOffset(canvas: HTMLCanvasElement, options: RenderOp
 			context.stroke();
 			context.fillStyle = 'red';
 		}
+
+		const src = canvas.toDataURL('image/png');
+
+		img.width = canvasWidth;
+		img.height = canvasHeight;
+		img.src = src;
 	}
 
 	render(options);
